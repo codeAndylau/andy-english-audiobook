@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f5f1e8">
   <meta name="description" content="A Place at the Table — a complete 24-chapter English novella with Andy, Maya and a place to find your voice. English stories and practical speaking exercises.">
   <title>A Place at the Table · Andy’s English Journey</title>
-  <link rel="stylesheet" href="style.css?v=20261117-zh">
-  <script type="module" src="app.js?v=20261117-zh"></script>
+  <link rel="stylesheet" href="style.css?v=20261117-dock">
+  <script type="module" src="app.js?v=20261117-dock"></script>
 </head>
 <body>
   <a class="skip" href="#reader">跳到正文</a>
@@ -38,14 +38,15 @@
       <div class="chapter-heading"><p id="partLabel" class="eyebrow"></p><div class="chapter-kicker"><span id="chapterNumber"></span><span id="level" class="level"></span></div><h2 id="chapterTitle" lang="en" tabindex="-1"></h2><p id="focus"></p></div>
       <div class="reader-tools"><div class="tabs" role="group" aria-label="阅读模式"><button id="storyTab" class="selected" aria-pressed="true">英文正文</button><button id="practiceTab" aria-pressed="false">开口练习</button></div><div class="font-tools" role="group" aria-label="正文字号"><button id="fontDown" aria-label="缩小正文字号">A−</button><button id="fontUp" aria-label="放大正文字号">A+</button></div></div>
       <div class="chapter-audio"><button id="listenChapter" class="primary" disabled>▶ 从本章开始听</button><a href="#audiobook">返回播放器</a><a id="downloadChapter" hidden download>下载本章 MP3 ↗</a><span>阅读翻页不会打断音频</span></div>
-      <section class="shadowing" aria-label="逐句跟读">
-        <div class="shadowing-heading"><strong>逐句跟读</strong><label><input id="followAudio" type="checkbox"> 跟随朗读</label></div>
+      <button id="shadowingDock" class="shadowing-dock" aria-label="展开逐句跟读" aria-controls="shadowingPanel" aria-expanded="false" hidden>‹ 跟读</button>
+      <section id="shadowingPanel" class="shadowing" aria-label="逐句跟读">
+        <div class="shadowing-heading"><strong>逐句跟读</strong><label><input id="followAudio" type="checkbox"> 跟随</label><button id="shadowingCollapse" aria-label="收起逐句跟读到右侧" aria-controls="shadowingPanel" aria-expanded="true">收起 ›</button></div>
         <p id="sentenceText" lang="en">音频载入后，可点击正文中的任意句子开始听。</p>
         <button id="translationToggle" class="translation-toggle" aria-expanded="false" aria-controls="translationPanel" disabled>查看中文</button>
         <div id="translationPanel" class="translation-panel" hidden><p id="sentenceChinese" lang="zh-CN"></p><button id="translationRetry" hidden>重试中文</button></div>
         <div class="shadowing-controls"><button id="sentencePrevious" disabled>上一句</button><button id="sentencePlay" disabled>播放</button><button id="sentenceNext" disabled>下一句</button><button id="sentenceRepeat" disabled aria-pressed="false">单句循环：关</button></div>
-        <p id="sentenceHint" class="shadowing-hint">正在载入逐句时间轴……</p>
       </section>
+      <p id="sentenceHint" class="shadowing-hint">正在载入逐句时间轴……</p>
       <article id="story" class="prose" lang="en" aria-label="英文故事"></article>
       <section id="practice" aria-label="开口练习" hidden></section>
       <div class="chapter-end"><span class="end-mark" aria-hidden="true">✳</span><button id="complete" class="complete">标记本章已完成</button><p>先开口，再翻到下一页。</p></div>

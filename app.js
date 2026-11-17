@@ -122,6 +122,7 @@ function renderStory(c) {
   if (lastAudioState) updateSentences(lastAudioState);
 }
 function chooseSentence(sentence) {
+  setShadowingCollapsed(false);
   translations.show(sentence);
   if (!audioPlayer) { $('sentenceHint').textContent = '音频仍在载入，请稍候；若加载失败，可点击播放器的重试按钮。'; return; }
   selectedSentence = sentence;
@@ -251,3 +252,20 @@ fetch('book.json').then(response => { if (!response.ok) throw new Error('无法�
 
 $('translationToggle').addEventListener('click', () => { if ($('translationPanel').hidden) translations.show(controlSentence()); else translations.hide(); });
 $('translationRetry').addEventListener('click', () => translations.retry());
+
+function setShadowingCollapsed(collapsed, focus = false) {
+  $('shadowingPanel').hidden = collapsed;
+  $('shadowingDock').hidden = !collapsed;
+  saved.shadowingCollapsed = collapsed;
+  persist();
+  if (focus) {
+    $(collapsed ? 'shadowingDock' : 'shadowingCollapse').focus({preventScroll:true});
+    if (!collapsed) {
+      const rect = $('shadowingPanel').getBoundingClientRect();
+      if (rect.top >= innerHeight || rect.bottom <= 0) $('shadowingPanel').scrollIntoView({block:'start',behavior:'auto'});
+    }
+  }
+}
+$('shadowingCollapse').addEventListener('click', () => setShadowingCollapsed(true, true));
+$('shadowingDock').addEventListener('click', () => setShadowingCollapsed(false, true));
+setShadowingCollapsed(saved.shadowingCollapsed === true);
