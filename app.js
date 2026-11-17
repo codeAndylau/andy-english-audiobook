@@ -1,5 +1,13 @@
 import { createAudiobookPlayer } from './audio-player.mjs';
+import { createTranslations } from './translations.mjs';
 const $ = id => document.getElementById(id);
+const translations = createTranslations({onUpdate: state => {
+  $('translationPanel').hidden = !state.visible;
+  $('translationToggle').textContent = state.visible ? '收起中文' : '查看中文';
+  $('translationToggle').setAttribute('aria-expanded', String(state.visible));
+  $('sentenceChinese').textContent = state.text || '';
+  $('translationRetry').hidden = !state.error;
+}});
 const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Place at the Table'];
 let book = [], chapter = null, tab = 'story', audioPlayer = null, audioManifest = null, audioLoading = false;
 let sentenceData = null, sentenceList = [], lastAudioState = null, selectedSentence = null, highlightedId = null;
@@ -56,6 +64,7 @@ function setTab(which) {
   for (const name of ['story', 'practice']) { const button = $(`${name}Tab`); const active = name === which; button.classList.toggle('selected', active); button.setAttribute('aria-pressed', String(active)); }
 }
 function openChapter(id, scroll = false, following = false) {
+  if (!following) translations.hide();
   if (!following && chapter) { $('followAudio').checked = false; audioPlayer?.setLoop(null); }
   const next = book.find(c => c.id === id) || book[0]; chapter = next;
   if (following) history.replaceState(null, '', `#chapter-${next.id}`); saved.last = next.id; persist();
@@ -113,6 +122,7 @@ function renderStory(c) {
   if (lastAudioState) updateSentences(lastAudioState);
 }
 function chooseSentence(sentence) {
+  translations.show(sentence);
   if (!audioPlayer) { $('sentenceHint').textContent = '音频仍在载入，请稍候；若加载失败，可点击播放器的重试按钮。'; return; }
   selectedSentence = sentence;
   audioPlayer.playSentence(sentence, !!lastAudioState?.loop);
@@ -144,6 +154,8 @@ function updateSentences(state) {
   }
   const selected = controlSentence(), list = chapterSentences(chapter?.id), index = list.findIndex(s => s.id === selected?.id);
   $('sentenceText').textContent = selected?.text || '选择正文中的句子开始跟读。';
+  translations.select(selected);
+  $('translationToggle').disabled = !selected;
   $('sentencePrevious').disabled = !audioPlayer || index <= 0;
   $('sentenceNext').disabled = !audioPlayer || index < 0 || index === list.length - 1;
   $('sentencePlay').disabled = !audioPlayer || !selected;
@@ -151,7 +163,7 @@ function updateSentences(state) {
   $('sentencePlay').textContent = state.playing ? '暂停' : '播放';
   $('sentenceRepeat').setAttribute('aria-pressed', String(!!state.loop));
   $('sentenceRepeat').textContent = state.loop ? '单句循环：开' : '单句循环：关';
-  $('sentenceHint').textContent = state.loop ? '循环已开启，点击另一句可切换循环句；点击暂停停止收听。' : '点击正文听该句起的内容；开启单句循环反复跟读。循环适合保持屏幕开启时练习。';
+  $('sentenceHint').textContent = state.loop ? '循环已开启，点击另一句可切换循环句；点击暂停停止收听。' : '点击正文查看中文并听该句起的内容；开启单句循环反复跟读。循环适合保持屏幕开启时练习。';
 }
 async function initSentences(manifest) {
   try {
@@ -161,7 +173,7 @@ async function initSentences(manifest) {
     if (data.bookSha256 !== manifest.book.sha256 || data.chapters?.length !== 24) throw new Error('mismatch');
     sentenceData = data; sentenceList = data.chapters.flatMap(c => c.sentences.map(s => Object.assign(s, {chapterId:c.id})));
     if (chapter) renderStory(chapter);
-    $('sentenceHint').textContent = '点击正文句子开始收听，开启单句循环反复跟读。';
+    $('sentenceHint').textContent = '点击正文句子查看中文并收听，开启单句循环反复跟读。';
     if (lastAudioState) updateSentences(lastAudioState);
   } catch (_) { $('sentenceHint').textContent = '逐句时间轴暂时不可用，完整音频仍可收听。请刷新重试。'; }
 }
@@ -236,3 +248,6 @@ fetch('book.json').then(response => { if (!response.ok) throw new Error('无法�
   $('loading').hidden = true; $('reader').hidden = false;
   const id = Number(location.hash.match(/^#chapter-(\d+)$/)?.[1]) || saved.last || 1; openChapter(id);
 }).catch(error => { $('loading').textContent = `${error.message}。请刷新页面重试。`; });
+
+$('translationToggle').addEventListener('click', () => { if ($('translationPanel').hidden) translations.show(controlSentence()); else translations.hide(); });
+$('translationRetry').addEventListener('click', () => translations.retry());
