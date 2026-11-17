@@ -1,4 +1,3 @@
-import { loadAudioBlob } from './audio-loader.mjs';
 import { createAudiobookPlayer } from './audio-player.mjs';
 const $ = id => document.getElementById(id);
 const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Place at the Table'];
@@ -177,21 +176,18 @@ async function initAudio() {
     if (!manifest.book?.src || manifest.chapters?.length !== 24 || !Number.isFinite(manifest.book.duration)) throw new Error('音频目录不完整，请稍后重试。');
     audioManifest = manifest;
     initSentences(manifest);
-    $('audioLength').textContent = `${Math.round(manifest.book.duration / 60)} 分钟 · ${(manifest.book.bytes / 1048576).toFixed(1)} MB`;
-    const blob = await loadAudioBlob(manifest.book, received => {
-      $('audioStatus').textContent = `正在载入完整有声书 ${Math.min(100, Math.floor(received / manifest.book.bytes * 100))}% · 完成后可连续收听和任意跳章`;
-    });
-    const playbackManifest = {...manifest, book: {...manifest.book, src: URL.createObjectURL(blob)}};
     let storage; try { storage = window.localStorage; } catch (_) {}
-    audioPlayer = createAudiobookPlayer($('bookAudio'), playbackManifest, {
+    audioPlayer = createAudiobookPlayer($('bookAudio'), manifest, {
+      preloadAudio: new Audio(),
       storage,
       mediaSession: navigator.mediaSession,
       metadataFactory: window.MediaMetadata ? data => new MediaMetadata(data) : undefined,
       onUpdate: state => {
         $('nowChapter').textContent = `Chapter ${state.chapter.id} · ${state.chapter.title}`;
+        $('audioLength').textContent = `当前章 ${(state.chapter.bytes / 1048576).toFixed(1)} MB · 全书 ${Math.round(manifest.book.duration / 60)} 分钟`;
         const current = Math.max(0, state.time - state.chapter.start);
         $('audioPosition').textContent = `本章 ${timeLabel(current)} / ${timeLabel(state.chapter.duration)} · 全书 ${timeLabel(state.time)} / ${timeLabel(state.duration)}`;
-        const status = state.error || (state.ended ? '全书已播完。再次点击播放将从第一章开始。' : state.buffering ? '音频缓冲中……' : state.playing ? '正在连续播放 · 可使用支持的锁屏控制' : state.time > 0 ? '已记住当前位置 · 点击播放继续收听' : '点击播放器中的播放按钮，开始连续收听。');
+        const status = state.error || (state.ended ? '全书已播完。再次点击播放将从第一章开始。' : state.buffering ? '正在缓冲当前章节……' : state.playing ? (state.loop ? '正在循环当前句' : state.chapter === manifest.chapters.at(-1) ? '正在播放最后一章' : '正在播放 · 本章结束后自动续播下一章') : state.time > 0 ? '已记住当前位置 · 点击播放继续收听' : '点击播放器中的播放按钮，开始连续收听。');
         if ($('audioStatus').textContent !== status) $('audioStatus').textContent = status;
         $('audioRetry').hidden = !state.error;
         const rateValue = String(state.rate);
@@ -202,7 +198,6 @@ async function initAudio() {
         updateSentences(state);
       }
     });
-    $('audioLength').textContent = `${Math.round(manifest.book.duration / 60)} 分钟 · ${(manifest.book.bytes / 1048576).toFixed(1)} MB`;
     $('downloadBook').href = manifest.book.src;
     for (const id of ['rewind', 'forward', 'audioRate']) $(id).disabled = false;
     updateChapterAudio();
