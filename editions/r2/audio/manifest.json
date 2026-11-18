@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "voice": "en-US-AndrewNeural",
+  "generated": "2026-11-18T02:20:36.887178+00:00",
+  "book": {
+    "src": "editions/r2/audio/full-book.m4a",
+    "duration": 6821.28,
+    "bytes": 37401343,
+    "sha256": "697f240795f200da5857a3950c3481bae22bce27e3511924f80b1b621d328465"
+  },
+  "chapters": [
+    {
+      "id": 1,
+      "title": "The Second Question",
+      "src": "editions/r2/audio/chapter-01.mp3",
+      "duration": 214.224,
+      "bytes": 1285344,
+      "text_sha256": "1d6c26578d5bc3fd0739e14f9e52dd479af6ded83e40aa3f61a7e84496b0162e",
+      "start": 0.0,
+      "end": 214.224
+    },
+    {
+      "id": 2,
+      "title": "Two Shelves",
+      "src": "editions/r2/audio/chapter-02.mp3",
+      "duration": 180.216,
+      "bytes": 1081296,
+      "text_sha256": "8b28a1fbbda75e7f89c3e1387a3a309ed4cbdf7679fccf69de31b5b8b2cf98e3",
+      "start": 214.224,
+      "end": 394.44
+    },
+    {
+      "id": 3,
+      "title": "Dinner at Seven",
+      "src": "editions/r2/audio/chapter-03.mp3",
+      "duration": 220.536,
+      "bytes": 1323216,
+      "text_sha256": "04b1ae30f1ac173655e86d1e4e1ebe41cd75ad6b197b33373cf63ad1289575eb",
+      "start": 394.44,
+      "end": 614.976
+    },
+    {
+      "id": 4,
+      "title": "The Wrong Order",
+      "src": "editions/r2/audio/chapter-04.mp3",
+      "duration": 214.584,
+      "bytes": 1287504,
+      "text_sha256": "1e3bbca2743b9fd6361341db89c68422a62c61b9d9be18063a4ccec80ad7419a",
+      "start": 614.976,
+      "end": 829.56
+    },
+    {
+      "id": 5,
+      "title": "Not Tonight",
+      "src": "editions/r2/audio/chapter-05.mp3",
+      "duration": 196.44,
+      "bytes": 1178640,
+      "text_sha256": "ff7dd3f59491b980dc6aeed2c35a6490b44eef44714ce54963c5d94a76659938",
+      "start": 829.56,
+      "end": 1026.0
+    },
+    {
+      "id": 6,
+      "title": "The Message from Work",
+      "src": "editions/r2/audio/chapter-06.mp3",
+      "duration": 219.288,
+      "bytes": 1315728,
+      "text_sha256": "63523984177939244fc468b11f5459f9bf2bcc8861c6a8066cc1f8aabbfb7041",
+      "start": 1026.0,
+      "end": 1245.288
+    },
+    {
+      "id": 7,
+      "title": "What Do You Do?",
+      "src": "editions/r2/audio/chapter-07.mp3",
+      "duration": 258.168,
+      "bytes": 1549008,
+      "text_sha256": "9425c0c696ae3aba1c5068b679f05ef1e3b492d0d69214ad4f4dd202f9ee8ee9",
+      "start": 1245.288,
+      "end": 1503.456
+    },
+    {
+      "id": 8,
+      "title": "A Small Favour",
+      "src": "editions/r2/audio/chapter-08.mp3",
+      "duration": 254.472,
+      "bytes": 1526832,
+      "text_sha256": "14e36eac9ffaf98878c6ab5b61ccc06d685abab74c3e42550d942e1939236c5d",
+      "start": 1503.456,
+      "end": 1757.928
+    },
+    {
+      "id": 9,
+      "title": "Tell Me About a Time",
+      "src": "editions/r2/audio/chapter-09.mp3",
+      "duration": 284.736,
+      "bytes": 1708416,
+      "text_sha256": "1365d2e1d7c03976a9a2c37b42ec1133eea5e429a6fb2606c844fe73d100add0",
+      "start": 1757.928,
+      "end": 2042.664
+    },
+    {
+      "id": 10,
+      "title": "The Call I Missed",
+      "src": "editions/r2/audio/chapter-10.mp3",
+      "duration": 269.472,
+      "bytes": 1616832,
+      "text_sha256": "28d15d70fb807cd0c71eabc7c16b68f5120f8ea6bce523361c2f56596ef5b194",
+      "start": 2042.664,
+      "end": 2312.136
+    },
+    {
+      "id": 11,
+      "title": "Not This Time",
+      "src": "editions/r2/audio/chapter-11.mp3",
+      "duration": 278.352,
+      "bytes": 1670112,
+      "text_sha256": "adfea36fc8f88949e8d5cd41eaeece7c3ad0e703c885375a6d3666223caea2ef",
+      "start": 2312.136,
+      "end": 2590.488
+    },
+    {
+      "id": 12,
+      "title": "One More Interview",
+      "src": "editions/r2/audio/chapter-12.mp3",
+      "duration": 302.184,
+      "bytes": 1813104,
+      "text_sha256": "b1c3c9475fd422f2829b3eabd05da46aa28414e4b0a774212522d2f064666f75",
+      "start": 2590.488,
+      "end": 2892.672
+    },
+    {
+      "id": 13,
+      "title": "The First Monday",
+      "src": "editions/r2/audio/chapter-13.mp3",
+      "duration": 340.8,
+      "bytes": 2044800,
+      "text_sha256": "f2fdcb8894ba9b12ba88fe6d35a3f746ef8ebcda37e254dd99d74b443f0c19e6",
+      "start": 2892.672,
+      "end": 3233.472
+    },
+    {
+      "id": 14,
+      "title": "What Does “Done” Mean?",
+      "src": "editions/r2/audio/chapter-14.mp3",
+      "duration": 330.792,
+      "bytes": 1984752,
+      "text_sha256": "e9630990c1620fcc42026bf6e1b5747ae7c3b23b2c424535564b0559ad916085",
+      "start": 3233.472,
+      "end": 3564.264
+    },
+    {
+      "id": 15,
+      "title": "Friday, Which Friday?",
+      "src": "editions/r2/audio/chapter-15.mp3",
+      "duration": 350.064,
+      "bytes": 2100384,
+      "text_sha256": "38d4970a397bfbb84f7999b3ad86da546c38e32ae483d70399b627cb303201ab",
+      "start": 3564.264,
+      "end": 3914.328
+    },
+    {
+      "id": 16,
+      "title": "The Update",
+      "src": "editions/r2/audio/chapter-16.mp3",
+      "duration": 328.656,
+      "bytes": 1971936,
+      "text_sha256": "e9475576b7df538e86be18c14ff8bca0b50c828f5447ef3f14135e067e74c9e4",
+      "start": 3914.328,
+      "end": 4242.984
+    },
+    {
+      "id": 17,
+      "title": "I Should Have Asked",
+      "src": "editions/r2/audio/chapter-17.mp3",
+      "duration": 303.864,
+      "bytes": 1823184,
+      "text_sha256": "b38d4f3f2f501c16258a44f6686f5fe1a38c5faf788ca7232b07b1e37fa88261",
+      "start": 4242.984,
+      "end": 4546.848
+    },
+    {
+      "id": 18,
+      "title": "A Different Plan",
+      "src": "editions/r2/audio/chapter-18.mp3",
+      "duration": 306.528,
+      "bytes": 1839168,
+      "text_sha256": "922200b783f5192c28b3af1be96df7ac522565edca06edfe6463aa949c9250ae",
+      "start": 4546.848,
+      "end": 4853.376
+    },
+    {
+      "id": 19,
+      "title": "What the Customer Didn’t Say",
+      "src": "editions/r2/audio/chapter-19.mp3",
+      "duration": 324.48,
+      "bytes": 1946880,
+      "text_sha256": "9c237c304597b86f67f6adf246c7e36c6dbe7fd0cf4a344d4d20c70b3dd99e18",
+      "start": 4853.376,
+      "end": 5177.856
+    },
+    {
+      "id": 20,
+      "title": "Who Gets to Speak?",
+      "src": "editions/r2/audio/chapter-20.mp3",
+      "duration": 330.672,
+      "bytes": 1984032,
+      "text_sha256": "0ac089beee8639f90e38595b5ac7d9e6af9f560867d0b5ba55be804762b20f3c",
+      "start": 5177.856,
+      "end": 5508.528
+    },
+    {
+      "id": 21,
+      "title": "The Cost of Friday",
+      "src": "editions/r2/audio/chapter-21.mp3",
+      "duration": 337.752,
+      "bytes": 2026512,
+      "text_sha256": "ce7ee84ab38906856269ecc2a8845806f658118ef1fba0c1c437e409231c47b9",
+      "start": 5508.528,
+      "end": 5846.28
+    },
+    {
+      "id": 22,
+      "title": "A Difficult Conversation",
+      "src": "editions/r2/audio/chapter-22.mp3",
+      "duration": 304.872,
+      "bytes": 1829232,
+      "text_sha256": "0f6b5a229c988c14ebead988af307225c4eb6afb580cf2bfef4bf1659b103a64",
+      "start": 5846.28,
+      "end": 6151.152
+    },
+    {
+      "id": 23,
+      "title": "Good Enough to Launch?",
+      "src": "editions/r2/audio/chapter-23.mp3",
+      "duration": 338.64,
+      "bytes": 2031840,
+      "text_sha256": "0c34689e657563c4f6067f514dc476e986e3092547ddb1574ade52cf13e1be1f",
+      "start": 6151.152,
+      "end": 6489.792
+    },
+    {
+      "id": 24,
+      "title": "The Empty Chair",
+      "src": "editions/r2/audio/chapter-24.mp3",
+      "duration": 331.488,
+      "bytes": 1988928,
+      "text_sha256": "cbeeea55e1afbd93de4ba9edacd54b3db96bd942241de0d260dca50b53126474",
+      "start": 6489.792,
+      "end": 6821.28
+    }
+  ]
+}

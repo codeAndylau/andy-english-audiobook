@@ -23,3 +23,6 @@ test('hiding during a pending request does not reopen the panel',async()=>{
 test('network failure and missing sentence expose retry instead of stale text',async()=>{
  let count=0,last;const t=createTranslations({fetcher:async()=>{if(++count===1)throw new Error('offline');return response(1)},onUpdate:s=>last=s});await t.show(s(1));assert.equal(last.error,true);await t.retry();assert.equal(last.text,'第一句');await t.select(s(1,3));assert.equal(last.error,true);assert.ok(!last.text.includes('第一句'));
 });
+test('edition translation requests stay within their versioned path',async()=>{
+ let url;const t=createTranslations({basePath:'editions/r2/translations',fetcher:async value=>{url=value;return response(1)},onUpdate:()=>{}});await t.show(s(1));assert.equal(url,'editions/r2/translations/chapter-01.json');
+});

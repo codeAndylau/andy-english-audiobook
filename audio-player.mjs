@@ -14,9 +14,9 @@ export function restorePosition(raw, manifest) {
 }
 
 export function createAudiobookPlayer(audio, manifest, options = {}) {
-  const { storage, mediaSession, metadataFactory, preloadAudio, onUpdate = () => {} } = options;
+  const { storage, storageKey = KEY, mediaSession, metadataFactory, preloadAudio, onUpdate = () => {} } = options;
   let raw = null;
-  try { raw = storage?.getItem(KEY); } catch (_) {}
+  try { raw = storage?.getItem(storageKey); } catch (_) {}
   const resume = restorePosition(raw, manifest);
   let chapter = chapterAtTime(manifest.chapters, resume.time), rate = resume.rate;
   let pendingSeek = resume.time, metadataReady = false, wantsPlay = false, completed = false;
@@ -27,7 +27,7 @@ export function createAudiobookPlayer(audio, manifest, options = {}) {
   const position = () => pendingSeek ?? Math.min(chapter.end, chapter.start + (Number.isFinite(audio.currentTime) ? audio.currentTime : 0));
   const playing = () => wantsPlay && !audio.paused && !audio.ended && !error;
   function persist() {
-    try { storage?.setItem(KEY, JSON.stringify({ version: manifest.version, fingerprint: manifest.book.sha256, time: position(), rate })); } catch (_) {}
+    try { storage?.setItem(storageKey, JSON.stringify({ version: manifest.version, fingerprint: manifest.book.sha256, time: position(), rate })); } catch (_) {}
     lastSave = Date.now();
   }
   function updatePreload() {

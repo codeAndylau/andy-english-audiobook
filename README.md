@@ -1,9 +1,13 @@
 # A Place at the Table
 
-Public reading and listening mirror: 24 chapters, complete neural audiobook, sentence highlighting and sentence repeat.
+Public reader: https://codeandylau.github.io/andy-english-audiobook/
 
-AI narration: en-US-AndrewNeural. Audio is about 89 minutes. No visitor login is required.
+The November 18, 2026 story revision includes 24 chapters, 21,162 English story words, 120 useful expressions, 72 role-play turns and 2,761 sentence translations. Andy starts with everyday conversations, then moves through job hunting and international teamwork. The early chapters retain an A2 editorial target; the book does not certify a CEFR level or an IELTS score.
 
-Published files copied from the approved source version `46129425fb3ac6632a18c6ff02e1d4b59a4c40da`. The mirror omits generation-only metadata and external font downloads. Playback now streams chapter MP3s, preserves absolute sentence timestamps, and preloads only the next chapter near the current chapter end. The full-book M4A remains a download only. Update by copying the latest runtime assets and verifying the sentence/audio fingerprint.
+AI narration uses en-US-AndrewNeural. Visitors do not need to sign in. The reader streams chapter MP3s and preloads only the following chapter near the current chapter end. The continuous M4A is offered separately for download. Mobile background playback depends on the browser and operating system.
 
-Click any story sentence to reveal its Simplified Chinese meaning in the shadowing panel. Chapter translation files load on demand; audio playback and sentence repeat remain independent. Use “收起中文” to return to English-only practice.
+Click a sentence to show its Simplified Chinese meaning and play from that point. The compact shadowing panel supports sentence repeat, previous/next sentence and collapse to the right-side tab. Translations load on demand by chapter.
+
+The active edition is stored under `editions/r2/`. Text, audio, sentence timestamps, translations and downloads switch together. Versioned runtime module URLs prevent cached translation/player code from mixing editions. Reading and listening progress use separate keys from the original release.
+
+Validation: `node --test tests/*.test.mjs`. The edition data test checks exact text fingerprints, sentence character ranges, timing ranges, chapter media sizes and the continuous audio hash. Generation-side validation additionally checks word-boundary coverage and fully decodes each chapter and the continuous audio.

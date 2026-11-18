@@ -29,6 +29,19 @@ function setup(saved, ready=true) {
 }
 const saved=(time,rate=.8)=>JSON.stringify({version:1,fingerprint:'book',time,rate});
 
+test('editions keep independent progress when old and new tabs both save',()=>{
+  const values=new Map([['apatt-audiobook-v1',saved(120)],['apatt-audiobook-r2',saved(210)]]);
+  const storage={getItem:key=>values.get(key),setItem:(key,value)=>values.set(key,value)};
+  const oldAudio=new Audio(), newAudio=new Audio();
+  const oldPlayer=createAudiobookPlayer(oldAudio,manifest,{storage});
+  const newPlayer=createAudiobookPlayer(newAudio,manifest,{storage,storageKey:'apatt-audiobook-r2'});
+  oldAudio.ready();newAudio.ready();
+  assert.equal(oldAudio.src,'two.mp3');assert.equal(newAudio.src,'three.mp3');
+  newAudio.tick(35);newPlayer.persist();oldAudio.tick(45);oldPlayer.persist();
+  assert.equal(JSON.parse(values.get('apatt-audiobook-r2')).time,235);
+  assert.equal(JSON.parse(values.get('apatt-audiobook-v1')).time,145);
+});
+
 test('chapter boundaries and incompatible saved records are validated',()=>{
   assert.equal(chapterAtTime(manifest.chapters,100).id,2);
   assert.deepEqual(restorePosition('{',manifest),{time:0,rate:.9});

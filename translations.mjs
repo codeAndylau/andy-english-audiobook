@@ -1,4 +1,4 @@
-export function createTranslations({fetcher = fetch, onUpdate}) {
+export function createTranslations({fetcher = fetch, basePath = 'translations', onUpdate}) {
   const cache = new Map();
   let selected = null, visible = false, request = 0;
   async function render() {
@@ -9,7 +9,7 @@ export function createTranslations({fetcher = fetch, onUpdate}) {
       const chapterId = sentence.chapterId;
       if (!cache.has(chapterId)) {
         const pending = (async () => {
-          const response = await fetcher(`translations/chapter-${String(chapterId).padStart(2, '0')}.json`);
+          const response = await fetcher(`${basePath}/chapter-${String(chapterId).padStart(2, '0')}.json`);
           if (!response.ok) throw new Error('unavailable');
           const data = await response.json();
           if (data.chapterId !== chapterId || !data.sentences) throw new Error('mismatch');

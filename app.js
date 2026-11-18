@@ -1,7 +1,8 @@
-import { createAudiobookPlayer } from './audio-player.mjs';
-import { createTranslations } from './translations.mjs';
+import { createAudiobookPlayer } from './audio-player.mjs?v=20261118-r2';
+import { createTranslations } from './translations.mjs?v=20261118-r2';
 const $ = id => document.getElementById(id);
-const translations = createTranslations({onUpdate: state => {
+const editionRoot = 'editions/r2/';
+const translations = createTranslations({basePath: `${editionRoot}translations`, onUpdate: state => {
   $('translationPanel').hidden = !state.visible;
   $('translationToggle').textContent = state.visible ? '收起中文' : '查看中文';
   $('translationToggle').setAttribute('aria-expanded', String(state.visible));
@@ -11,7 +12,7 @@ const translations = createTranslations({onUpdate: state => {
 const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Place at the Table'];
 let book = [], chapter = null, tab = 'story', audioPlayer = null, audioManifest = null, audioLoading = false;
 let sentenceData = null, sentenceList = [], lastAudioState = null, selectedSentence = null, highlightedId = null;
-const progressKey = 'apatt-progress-v1';
+const progressKey = 'apatt-progress-r2';
 let saved = { last: 1, completed: [], font: 19 };
 try { const value = JSON.parse(localStorage.getItem(progressKey)); if (value && typeof value === 'object') saved = { ...saved, ...value }; } catch (_) {}
 saved.completed = Array.isArray(saved.completed) ? saved.completed.filter(n => Number.isInteger(n) && n >= 1 && n <= 24) : [];
@@ -168,7 +169,7 @@ function updateSentences(state) {
 }
 async function initSentences(manifest) {
   try {
-    const response = await fetch('audio/sentences.json', {cache:'no-cache'});
+    const response = await fetch(`${editionRoot}audio/sentences.json`, {cache:'no-cache'});
     if (!response.ok) throw new Error('missing');
     const data = await response.json();
     if (data.bookSha256 !== manifest.book.sha256 || data.chapters?.length !== 24) throw new Error('mismatch');
@@ -183,7 +184,7 @@ async function initAudio() {
   audioLoading = true;
   $('audioRetry').hidden = true;
   try {
-    const response = await fetch('audio/manifest.json', {cache:'no-cache'});
+    const response = await fetch(`${editionRoot}audio/manifest.json`, {cache:'no-cache'});
     if (!response.ok) throw new Error('音频目录暂时无法载入，请刷新重试。');
     const manifest = await response.json();
     if (!manifest.book?.src || manifest.chapters?.length !== 24 || !Number.isFinite(manifest.book.duration)) throw new Error('音频目录不完整，请稍后重试。');
@@ -193,6 +194,7 @@ async function initAudio() {
     audioPlayer = createAudiobookPlayer($('bookAudio'), manifest, {
       preloadAudio: new Audio(),
       storage,
+      storageKey: 'apatt-audiobook-r2',
       mediaSession: navigator.mediaSession,
       metadataFactory: window.MediaMetadata ? data => new MediaMetadata(data) : undefined,
       onUpdate: state => {
@@ -242,7 +244,7 @@ window.addEventListener('hashchange', () => { const match = location.hash.match(
 window.addEventListener('pagehide', () => audioPlayer?.persist());
 document.addEventListener('visibilitychange', () => { if (document.hidden) audioPlayer?.persist(); });
 font(0); menu(false); initAudio();
-fetch('book.json').then(response => { if (!response.ok) throw new Error('无法载入书稿'); return response.json(); }).then(data => {
+fetch(`${editionRoot}book.json`).then(response => { if (!response.ok) throw new Error('无法载入书稿'); return response.json(); }).then(data => {
   if (!Array.isArray(data) || data.length !== 24) throw new Error('书稿内容不完整');
   book = data; fillContents(); const words = data.reduce((total, c) => total + c.story.split(/\s+/).filter(Boolean).length, 0);
   $('wordCount').textContent = `${words.toLocaleString('en-US')} 英文词`;
