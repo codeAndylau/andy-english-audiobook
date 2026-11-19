@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f5f1e8">
+  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="A Place at the Table — a complete 24-chapter English novella with Andy, Maya and a place to find your voice. English stories and practical speaking exercises.">
   <title>A Place at the Table · Andy’s English Journey</title>
-  <script src="theme.js?v=20261119-theme"></script>
-  <link rel="stylesheet" href="style.css?v=20261119-language">
-  <script type="module" src="app.js?v=20261119-language"></script>
+  <script src="theme.js?v=20261119-bilingual"></script>
+  <link rel="stylesheet" href="style.css?v=20261119-bilingual">
+  <script type="module" src="app.js?v=20261119-bilingual"></script>
 </head>
 <body>
   <a class="skip" href="#reader">跳到正文</a>
-  <div class="mobilebar"><a class="wordmark" href="#chapter-1">A Place at the Table</a><div class="mobile-actions"><button type="button" data-theme-toggle aria-label="切换到深色主题">深色</button><button id="menu" aria-controls="sidebar" aria-expanded="false">章节目录</button></div></div>
-  <button type="button" class="desktop-theme" data-theme-toggle aria-label="切换到深色主题">深色</button>
+  <div class="mobilebar"><a class="wordmark" href="#chapter-1">A Place at the Table</a><div class="mobile-actions"><button type="button" data-theme-toggle aria-label="切换到黑色主题">黑色</button><button id="menu" aria-controls="sidebar" aria-expanded="false">章节目录</button></div></div>
+  <button type="button" class="desktop-theme" data-theme-toggle aria-label="切换到黑色主题">黑色</button>
   <button id="sidebarExpand" class="desktop-sidebar-control sidebar-expand" aria-controls="sidebar" aria-expanded="false" hidden>展开目录 ›</button>
   <aside id="sidebar" aria-label="全书目录">
     <button id="sidebarCollapse" class="desktop-sidebar-control sidebar-collapse" aria-controls="sidebar" aria-expanded="true">‹ 收起目录</button>
@@ -40,7 +40,7 @@
     <div id="loading" role="status">正在打开书页……</div>
     <section id="reader" aria-labelledby="chapterTitle" hidden>
       <div class="chapter-heading"><p id="partLabel" class="eyebrow"></p><div class="chapter-kicker"><span id="chapterNumber"></span><span id="level" class="level"></span></div><h2 id="chapterTitle" lang="en" tabindex="-1"></h2><p id="focus"></p></div>
-      <div class="reader-tools"><div class="tabs" role="group" aria-label="阅读模式"><button id="storyTab" class="selected" aria-pressed="true">英文正文</button><button id="practiceTab" aria-pressed="false">开口练习</button></div><button id="storyLanguage" type="button" aria-controls="story" aria-pressed="false" disabled>切换中文</button><div class="font-tools" role="group" aria-label="正文字号"><button id="fontDown" aria-label="缩小正文字号">A−</button><button id="fontUp" aria-label="放大正文字号">A+</button></div></div>
+      <div class="reader-tools"><div class="tabs" role="group" aria-label="阅读模式"><button id="storyTab" class="selected" aria-pressed="true">英文正文</button><button id="practiceTab" aria-pressed="false">开口练习</button></div><select id="storyLanguage" aria-label="正文语言" aria-controls="story" disabled><option value="en">英文</option><option value="zh">中文</option><option value="bilingual">中英对照</option></select><div class="font-tools" role="group" aria-label="正文字号"><button id="fontDown" aria-label="缩小正文字号">A−</button><button id="fontUp" aria-label="放大正文字号">A+</button></div></div>
       <div class="chapter-audio"><button id="listenChapter" class="primary" disabled>▶ 从本章开始听</button><a href="#audiobook">返回播放器</a><a id="downloadChapter" hidden download>下载本章 MP3 ↗</a><span>阅读翻页不会打断音频</span></div>
       <button id="shadowingDock" class="shadowing-dock" aria-label="展开逐句跟读" aria-controls="shadowingPanel" aria-expanded="false" hidden>‹ 跟读</button>
       <section id="shadowingPanel" class="shadowing" aria-label="逐句跟读">

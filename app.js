@@ -125,6 +125,7 @@ function updateChapterAudio() {
 function chapterSentences(id) { return sentenceData?.chapters.find(c => c.id === id)?.sentences || []; }
 function renderStory(c) {
   $('story').lang = 'en';
+  $('story').dataset.mode = 'en';
   $('story').setAttribute('aria-label', '英文故事');
   $('storyTab').textContent = '英文正文';
   const sentences = chapterSentences(c.id); let cursor = 0;
@@ -148,12 +149,11 @@ function renderStory(c) {
 }
 async function updateStoryLanguage(c) {
   const request = ++languageRequest;
-  const chinese = storyLanguage === 'zh';
-  $('storyLanguage').textContent = chinese ? '切换英文' : '切换中文';
-  $('storyLanguage').setAttribute('aria-pressed', String(chinese));
+  const bilingual = storyLanguage === 'bilingual';
+  $('storyLanguage').value = storyLanguage;
   $('storyLanguageStatus').textContent = '';
   $('story').removeAttribute('aria-busy');
-  if (!chinese) return;
+  if (storyLanguage === 'en') return;
   $('storyLanguageStatus').textContent = '正在加载中文……';
   $('story').setAttribute('aria-busy', 'true');
   try {
@@ -162,19 +162,26 @@ async function updateStoryLanguage(c) {
     const nodes = [...$('story').querySelectorAll('.sentence')];
     if (!nodes.length || nodes.some(node => typeof text[node.dataset.sentenceId] !== 'string' || !text[node.dataset.sentenceId].trim())) throw new Error('incomplete');
     nodes.forEach(node => {
-      node.textContent = text[node.dataset.sentenceId];
+      const chinese = text[node.dataset.sentenceId];
+      if (bilingual) {
+        const englishLine = el('span', node.textContent, 'sentence-en');
+        englishLine.lang = 'en';
+        const chineseLine = el('span', chinese, 'sentence-zh');
+        chineseLine.lang = 'zh-CN';
+        node.replaceChildren(englishLine, chineseLine);
+      } else node.textContent = chinese;
       node.setAttribute('aria-label', `查看原句与中文：${node.textContent}`);
     });
-    $('story').lang = 'zh-CN';
-    $('story').setAttribute('aria-label', '中文故事');
-    $('storyTab').textContent = '中文正文';
+    $('story').lang = bilingual ? 'en' : 'zh-CN';
+    $('story').dataset.mode = storyLanguage;
+    $('story').setAttribute('aria-label', bilingual ? '中英对照故事' : '中文故事');
+    $('storyTab').textContent = bilingual ? '中英对照' : '中文正文';
     $('storyLanguageStatus').textContent = '';
   } catch (_) {
     if (request !== languageRequest) return;
     storyLanguage = 'en';
-    $('storyLanguage').textContent = '切换中文';
-    $('storyLanguage').setAttribute('aria-pressed', 'false');
-    $('storyLanguageStatus').textContent = '中文暂时无法加载，已保留英文。请再次点击切换中文重试。';
+    $('storyLanguage').value = 'en';
+    $('storyLanguageStatus').textContent = '中文暂时无法加载，已保留英文。请重新选择中文或中英对照重试。';
   } finally {
     if (request === languageRequest) $('story').removeAttribute('aria-busy');
   }
@@ -280,7 +287,7 @@ async function initAudio() {
 }
 $('menu').addEventListener('click', () => menu(!document.body.classList.contains('menu-open')));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
-$('storyLanguage').addEventListener('click', () => { if (!chapter) return; storyLanguage = storyLanguage === 'en' ? 'zh' : 'en'; setTab('story'); renderStory(chapter); });
+$('storyLanguage').addEventListener('change', () => { if (!chapter) return; storyLanguage = $('storyLanguage').value; setTab('story'); renderStory(chapter); });
 $('storyTab').addEventListener('click', () => setTab('story'));
 $('practiceTab').addEventListener('click', () => { $('followAudio').checked = false; setTab('practice'); });
 $('fontDown').addEventListener('click', () => font(-1)); $('fontUp').addEventListener('click', () => font(1));
