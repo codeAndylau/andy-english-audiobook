@@ -40,6 +40,6 @@
 .desktop-sidebar-control{min-height:44px;font-size:12px;background:var(--paper)}
 .sidebar-collapse{display:block;margin:0 0 20px auto}
 .sidebar-expand{position:fixed;left:12px;top:10px;z-index:30}
-@media(min-width:761px){body.sidebar-collapsed #sidebar{display:none}body.sidebar-collapsed #main{margin-left:auto;margin-right:auto;width:100%}}
+@media(min-width:761px){body.sidebar-collapsed .shadowing{top:64px}body.sidebar-collapsed #sidebar{display:none}body.sidebar-collapsed #main{margin-left:auto;margin-right:auto;width:100%}}
 @media(max-width:760px){.desktop-sidebar-control{display:none}}
 @media print{.desktop-sidebar-control{display:none!important}}
