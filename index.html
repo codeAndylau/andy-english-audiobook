@@ -7,8 +7,8 @@
   <meta name="description" content="A Place at the Table — a complete 24-chapter English novella with Andy, Maya and a place to find your voice. English stories and practical speaking exercises.">
   <title>A Place at the Table · Andy’s English Journey</title>
   <script src="theme.js?v=20261119-theme"></script>
-  <link rel="stylesheet" href="style.css?v=20261119-sidebar">
-  <script type="module" src="app.js?v=20261119-sidebar"></script>
+  <link rel="stylesheet" href="style.css?v=20261119-drag">
+  <script type="module" src="app.js?v=20261119-drag"></script>
 </head>
 <body>
   <a class="skip" href="#reader">跳到正文</a>
@@ -44,7 +44,7 @@
       <div class="chapter-audio"><button id="listenChapter" class="primary" disabled>▶ 从本章开始听</button><a href="#audiobook">返回播放器</a><a id="downloadChapter" hidden download>下载本章 MP3 ↗</a><span>阅读翻页不会打断音频</span></div>
       <button id="shadowingDock" class="shadowing-dock" aria-label="展开逐句跟读" aria-controls="shadowingPanel" aria-expanded="false" hidden>‹ 跟读</button>
       <section id="shadowingPanel" class="shadowing" aria-label="逐句跟读">
-        <div class="shadowing-heading"><strong>逐句跟读</strong><label><input id="followAudio" type="checkbox"> 跟随</label><button id="shadowingCollapse" aria-label="收起逐句跟读到右侧" aria-controls="shadowingPanel" aria-expanded="true">收起 ›</button></div>
+        <div class="shadowing-heading"><strong>逐句跟读</strong><label><input id="followAudio" type="checkbox"> 跟随</label><button id="shadowingCollapse" aria-label="收起逐句跟读" aria-controls="shadowingPanel" aria-expanded="true">收起 ›</button></div>
         <p id="sentenceText" lang="en">音频载入后，可点击正文中的任意句子开始听。</p>
         <button id="translationToggle" class="translation-toggle" aria-expanded="false" aria-controls="translationPanel" disabled>查看中文</button>
         <div id="translationPanel" class="translation-panel" hidden><p id="sentenceChinese" lang="zh-CN"></p><button id="translationRetry" hidden>重试中文</button></div>

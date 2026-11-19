@@ -43,3 +43,5 @@
 @media(min-width:761px){body.sidebar-collapsed .shadowing{top:64px}body.sidebar-collapsed #sidebar{display:none}body.sidebar-collapsed #main{margin-left:auto;margin-right:auto;width:100%}}
 @media(max-width:760px){.desktop-sidebar-control{display:none}}
 @media print{.desktop-sidebar-control{display:none!important}}
+
+.shadowing-dock{z-index:35;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}.shadowing-dock.is-dragging{cursor:grabbing}.shadowing-dock[data-side=left]{border-radius:0 10px 10px 0}

@@ -1,3 +1,4 @@
+import { attachDockDrag } from './dock-drag.mjs?v=20261119-drag';
 import { createAudiobookPlayer } from './audio-player.mjs?v=20261118-r2';
 import { createTranslations } from './translations.mjs?v=20261118-r2';
 const $ = id => document.getElementById(id);
@@ -265,16 +266,18 @@ fetch(`${editionRoot}book.json`).then(response => { if (!response.ok) throw new 
   if (!Array.isArray(data) || data.length !== 24) throw new Error('书稿内容不完整');
   book = data; fillContents(); const words = data.reduce((total, c) => total + c.story.split(/\s+/).filter(Boolean).length, 0);
   $('wordCount').textContent = `${words.toLocaleString('en-US')} 英文词`;
-  $('loading').hidden = true; $('reader').hidden = false;
+  $('loading').hidden = true; $('reader').hidden = false; refreshDockPosition();
   const id = Number(location.hash.match(/^#chapter-(\d+)$/)?.[1]) || saved.last || 1; openChapter(id);
 }).catch(error => { $('loading').textContent = `${error.message}。请刷新页面重试。`; });
 
 $('translationToggle').addEventListener('click', () => { if ($('translationPanel').hidden) translations.show(controlSentence()); else translations.hide(); });
 $('translationRetry').addEventListener('click', () => translations.retry());
 
+const refreshDockPosition = attachDockDrag($('shadowingDock'));
 function setShadowingCollapsed(collapsed, focus = false) {
   $('shadowingPanel').hidden = collapsed;
   $('shadowingDock').hidden = !collapsed;
+  if (collapsed) refreshDockPosition();
   saved.shadowingCollapsed = collapsed;
   persist();
   if (focus) {
