@@ -82,14 +82,31 @@ function openChapter(id, scroll = false, following = false) {
   if (scroll) { $('chapterTitle').focus({ preventScroll: true }); $('reader').scrollIntoView({ behavior: 'auto', block: 'start' }); }
 }
 const mobile = matchMedia('(max-width:760px)');
+let sidebarCollapsed = false;
+try { sidebarCollapsed = localStorage.getItem('apatt-sidebar-collapsed') === 'true'; } catch (_) {}
 function menu(open) {
   open = open && mobile.matches;
   if (!open && document.activeElement?.closest('#sidebar') && mobile.matches) $('menu').focus();
   document.body.classList.toggle('menu-open', open); $('menu').setAttribute('aria-expanded', String(open));
-  $('sidebar').inert = mobile.matches && !open;
-  if (mobile.matches && !open) $('sidebar').setAttribute('aria-hidden', 'true'); else $('sidebar').removeAttribute('aria-hidden');
+  document.body.classList.toggle('sidebar-collapsed', sidebarCollapsed);
+  $('sidebarExpand').hidden = !sidebarCollapsed;
+  const hidden = mobile.matches ? !open : sidebarCollapsed;
+  if (hidden && document.activeElement?.closest('#sidebar')) {
+    (mobile.matches ? $('menu') : $('sidebarExpand')).focus();
+  }
+  $('sidebar').inert = hidden;
+  $('sidebarCollapse').setAttribute('aria-expanded', String(!hidden));
+  if (hidden) $('sidebar').setAttribute('aria-hidden', 'true'); else $('sidebar').removeAttribute('aria-hidden');
 }
 mobile.addEventListener('change', () => menu(false));
+function setSidebarCollapsed(collapsed) {
+  sidebarCollapsed = collapsed;
+  try { localStorage.setItem('apatt-sidebar-collapsed', String(collapsed)); } catch (_) {}
+  menu(false);
+  (collapsed ? $('sidebarExpand') : $('sidebarCollapse')).focus();
+}
+$('sidebarCollapse').addEventListener('click', () => setSidebarCollapsed(true));
+$('sidebarExpand').addEventListener('click', () => setSidebarCollapsed(false));
 function font(delta) { saved.font = Math.min(25, Math.max(16, saved.font + delta)); document.documentElement.style.setProperty('--story-size', `${saved.font}px`); $('fontDown').disabled = saved.font <= 16; $('fontUp').disabled = saved.font >= 25; persist(); }
 function timeLabel(value) {
   const seconds = Math.max(0, Math.floor(value || 0));
