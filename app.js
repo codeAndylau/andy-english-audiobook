@@ -1,6 +1,6 @@
 import { attachDockDrag } from './dock-drag.mjs?v=20261119-drag';
 import { createAudiobookPlayer } from './audio-player.mjs?v=20261118-r2';
-import { createTranslations } from './translations.mjs?v=20261118-r2';
+import { createTranslations } from './translations.mjs?v=20261119-language';
 const $ = id => document.getElementById(id);
 const editionRoot = 'editions/r2/';
 const translations = createTranslations({basePath: `${editionRoot}translations`, onUpdate: state => {
@@ -14,6 +14,7 @@ const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Pl
 let book = [], chapter = null, tab = 'story', audioPlayer = null, audioManifest = null, audioLoading = false;
 let sentenceData = null, sentenceList = [], lastAudioState = null, selectedSentence = null, highlightedId = null;
 let sentencePinned = false;
+let storyLanguage = 'en', languageRequest = 0;
 const progressKey = 'apatt-progress-r2';
 let saved = { last: 1, completed: [], font: 19 };
 try { const value = JSON.parse(localStorage.getItem(progressKey)); if (value && typeof value === 'object') saved = { ...saved, ...value }; } catch (_) {}
@@ -123,6 +124,9 @@ function updateChapterAudio() {
 }
 function chapterSentences(id) { return sentenceData?.chapters.find(c => c.id === id)?.sentences || []; }
 function renderStory(c) {
+  $('story').lang = 'en';
+  $('story').setAttribute('aria-label', '英文故事');
+  $('storyTab').textContent = '英文正文';
   const sentences = chapterSentences(c.id); let cursor = 0;
   const paragraphs = c.story.split(/\n\s*\n/).filter(Boolean).map(text => {
     const start = c.story.indexOf(text, cursor), end = start + text.length; cursor = end;
@@ -140,6 +144,40 @@ function renderStory(c) {
   });
   $('story').replaceChildren(...paragraphs); highlightedId = null;
   if (lastAudioState) updateSentences(lastAudioState);
+  updateStoryLanguage(c);
+}
+async function updateStoryLanguage(c) {
+  const request = ++languageRequest;
+  const chinese = storyLanguage === 'zh';
+  $('storyLanguage').textContent = chinese ? '切换英文' : '切换中文';
+  $('storyLanguage').setAttribute('aria-pressed', String(chinese));
+  $('storyLanguageStatus').textContent = '';
+  $('story').removeAttribute('aria-busy');
+  if (!chinese) return;
+  $('storyLanguageStatus').textContent = '正在加载中文……';
+  $('story').setAttribute('aria-busy', 'true');
+  try {
+    const text = await translations.loadChapter(c.id);
+    if (request !== languageRequest) return;
+    const nodes = [...$('story').querySelectorAll('.sentence')];
+    if (!nodes.length || nodes.some(node => typeof text[node.dataset.sentenceId] !== 'string' || !text[node.dataset.sentenceId].trim())) throw new Error('incomplete');
+    nodes.forEach(node => {
+      node.textContent = text[node.dataset.sentenceId];
+      node.setAttribute('aria-label', `查看原句与中文：${node.textContent}`);
+    });
+    $('story').lang = 'zh-CN';
+    $('story').setAttribute('aria-label', '中文故事');
+    $('storyTab').textContent = '中文正文';
+    $('storyLanguageStatus').textContent = '';
+  } catch (_) {
+    if (request !== languageRequest) return;
+    storyLanguage = 'en';
+    $('storyLanguage').textContent = '切换中文';
+    $('storyLanguage').setAttribute('aria-pressed', 'false');
+    $('storyLanguageStatus').textContent = '中文暂时无法加载，已保留英文。请再次点击切换中文重试。';
+  } finally {
+    if (request === languageRequest) $('story').removeAttribute('aria-busy');
+  }
 }
 function chooseSentence(sentence) {
   setShadowingCollapsed(false);
@@ -192,6 +230,7 @@ async function initSentences(manifest) {
     if (!response.ok) throw new Error('missing');
     const data = await response.json();
     if (data.bookSha256 !== manifest.book.sha256 || data.chapters?.length !== 24) throw new Error('mismatch');
+    $('storyLanguage').disabled = false;
     sentenceData = data; sentenceList = data.chapters.flatMap(c => c.sentences.map(s => Object.assign(s, {chapterId:c.id})));
     if (chapter) renderStory(chapter);
     $('sentenceHint').textContent = '点击正文句子查看中文，点击播放后收听。';
@@ -241,6 +280,7 @@ async function initAudio() {
 }
 $('menu').addEventListener('click', () => menu(!document.body.classList.contains('menu-open')));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
+$('storyLanguage').addEventListener('click', () => { if (!chapter) return; storyLanguage = storyLanguage === 'en' ? 'zh' : 'en'; setTab('story'); renderStory(chapter); });
 $('storyTab').addEventListener('click', () => setTab('story'));
 $('practiceTab').addEventListener('click', () => { $('followAudio').checked = false; setTab('practice'); });
 $('fontDown').addEventListener('click', () => font(-1)); $('fontUp').addEventListener('click', () => font(1));

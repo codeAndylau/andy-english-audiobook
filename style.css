@@ -45,3 +45,5 @@
 @media print{.desktop-sidebar-control{display:none!important}}
 
 .shadowing-dock{z-index:35;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}.shadowing-dock.is-dragging{cursor:grabbing}.shadowing-dock[data-side=left]{border-radius:0 10px 10px 0}
+
+.reader-tools{flex-wrap:wrap}#storyLanguage{font-size:12px;min-height:42px;padding:8px 12px}#storyLanguageStatus:empty{display:none}.prose[lang=zh-CN]{font-family:"Songti SC","Noto Serif CJK SC",serif}

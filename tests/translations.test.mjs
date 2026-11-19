@@ -26,3 +26,15 @@ test('network failure and missing sentence expose retry instead of stale text',a
 test('edition translation requests stay within their versioned path',async()=>{
  let url;const t=createTranslations({basePath:'editions/r2/translations',fetcher:async value=>{url=value;return response(1)},onUpdate:()=>{}});await t.show(s(1));assert.equal(url,'editions/r2/translations/chapter-01.json');
 });
+test('full chapter and sentence views share a request without opening the sentence panel',async()=>{
+ let resolve,calls=0;const states=[];
+ const t=createTranslations({fetcher:()=>{calls++;return new Promise(r=>resolve=r)},onUpdate:s=>states.push(s)});
+ const chapter=t.loadChapter(1);
+ assert.equal(states.length,0);
+ const sentence=t.show(s(1,2));
+ resolve(response(1));
+ assert.deepEqual(await chapter,{'1-1':'第一句','1-2':'第二句'});
+ await sentence;
+ assert.equal(calls,1);
+ assert.equal(states.at(-1).text,'第二句');
+});
