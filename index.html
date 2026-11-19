@@ -6,12 +6,14 @@
   <meta name="theme-color" content="#f5f1e8">
   <meta name="description" content="A Place at the Table — a complete 24-chapter English novella with Andy, Maya and a place to find your voice. English stories and practical speaking exercises.">
   <title>A Place at the Table · Andy’s English Journey</title>
-  <link rel="stylesheet" href="style.css?v=20261118-r2">
+  <script src="theme.js?v=20261119-theme"></script>
+  <link rel="stylesheet" href="style.css?v=20261119-theme">
   <script type="module" src="app.js?v=20261118-r2"></script>
 </head>
 <body>
   <a class="skip" href="#reader">跳到正文</a>
-  <div class="mobilebar"><a class="wordmark" href="#chapter-1">A Place at the Table</a><button id="menu" aria-controls="sidebar" aria-expanded="false">章节目录</button></div>
+  <div class="mobilebar"><a class="wordmark" href="#chapter-1">A Place at the Table</a><div class="mobile-actions"><button type="button" data-theme-toggle aria-label="切换到深色主题">深色</button><button id="menu" aria-controls="sidebar" aria-expanded="false">章节目录</button></div></div>
+  <button type="button" class="desktop-theme" data-theme-toggle aria-label="切换到深色主题">深色</button>
   <aside id="sidebar" aria-label="全书目录">
     <a class="brand" href="#chapter-1"><span class="book-symbol" aria-hidden="true">a<span>t</span></span><span>A PLACE<br>AT THE TABLE</span></a>
     <p class="side-sub">Andy’s English Journey</p>

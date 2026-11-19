@@ -16,3 +16,23 @@
 .shadowing{padding:8px 10px;margin-bottom:8px}.shadowing-heading{gap:8px}.shadowing-heading label{margin-left:auto}.shadowing-heading button{padding:4px 8px;min-height:32px;font-size:11px}.shadowing #sentenceText{margin:4px 0;max-height:3em;font-size:16px}.shadowing-controls button{min-height:38px;padding:6px 9px}.translation-toggle{min-height:30px;padding:3px 8px;margin-bottom:5px}.translation-panel{padding:5px 8px;margin-bottom:6px}.translation-panel p{font-size:13px;line-height:1.5;max-height:3em}.shadowing-hint{margin:0 0 16px}.shadowing-dock{position:fixed;right:0;top:42%;z-index:15;min-height:44px;padding:9px 10px;border-radius:10px 0 0 10px;background:var(--ink);color:white;border-color:var(--ink);box-shadow:0 3px 12px #263b3325;font-size:12px}.shadowing-dock:hover:not(:disabled){background:#385346}
 @media(max-width:760px){.shadowing{padding:7px 9px;top:65px}.shadowing-heading{font-size:11px}.shadowing-heading label{font-size:10px;gap:3px}.shadowing-controls{gap:4px}.shadowing-controls button{padding:6px 8px}.shadowing-dock{padding:9px 8px;font-size:11px}}
 @media print{.shadowing-dock,.shadowing-hint{display:none!important}}
+
+/* Reading themes keep the existing light palette and audio state intact. */
+:root{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark;--paper:#171e1b;--panel:#212c26;--ink:#e1e8df;--muted:#aab9ad;--line:#485b4e;--accent:#f0ab87}
+.desktop-theme{position:fixed;right:20px;top:10px;z-index:30;background:var(--paper);min-height:44px}
+.mobile-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+[data-theme=dark] button:hover:not(:disabled),[data-theme=dark] .chapter-link:hover,[data-theme=dark] .sentence:hover{background:#35473b}
+[data-theme=dark] .mobilebar,[data-theme=dark] .shadowing{background:#1b251ff5}
+[data-theme=dark] .skip,[data-theme=dark] .audiobook,[data-theme=dark] .audio-panel,[data-theme=dark] .level,[data-theme=dark] .tabs .selected,[data-theme=dark] .complete.is-done,[data-theme=dark] .question details p,[data-theme=dark] .role-turn,[data-theme=dark] .translation-panel,[data-theme=dark] .shadowing-controls button,[data-theme=dark] .rate-label select,[data-theme=dark] .audiobook .audio-buttons button{background:var(--panel);border-color:var(--line);color:var(--ink)}
+[data-theme=dark] .audio-badge,[data-theme=dark] .audiobook #audioStatus,[data-theme=dark] .chapter-link .num{color:var(--muted);border-color:var(--line)}
+[data-theme=dark] .phrase-card,[data-theme=dark] .audio-downloads,[data-theme=dark] .shadowing{border-color:var(--line)}
+[data-theme=dark] .progress-track{background:var(--line)}
+[data-theme=dark] button.primary,[data-theme=dark] .chapter-link[aria-current=page],[data-theme=dark] .shadowing-controls button[aria-pressed=true],[data-theme=dark] .shadowing-dock{background:#b7d7bd;color:#17271c;border-color:#b7d7bd}
+[data-theme=dark] .chapter-link[aria-current=page] .num{color:#304b36}
+[data-theme=dark] button.primary:hover:not(:disabled),[data-theme=dark] .shadowing-dock:hover:not(:disabled){background:#d2e8d6}
+[data-theme=dark] .sentence.sentence-active,[data-theme=dark] .sentence.sentence-active:hover{background:#5b491f;color:#fff0b5;box-shadow:0 2px 0 var(--accent)}
+@media(max-width:760px){.desktop-theme{display:none}.mobilebar{gap:8px;padding:0 12px}.mobilebar .wordmark{font-size:15px}.mobilebar button{min-height:44px;padding:6px 8px}}
+@media print{.desktop-theme{display:none!important}:root[data-theme=dark]{color-scheme:light;--paper:white;--panel:white;--ink:black;--muted:#444;--line:#bbb;--accent:#555}}
+
+@media print{[data-theme=dark] .sentence{color:black!important}}
