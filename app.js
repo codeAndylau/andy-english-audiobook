@@ -13,6 +13,7 @@ const translations = createTranslations({basePath: `${editionRoot}translations`,
 const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Place at the Table'];
 let book = [], chapter = null, tab = 'story', audioPlayer = null, audioManifest = null, audioLoading = false;
 let sentenceData = null, sentenceList = [], lastAudioState = null, selectedSentence = null, highlightedId = null;
+let sentencePinned = false;
 const progressKey = 'apatt-progress-r2';
 let saved = { last: 1, completed: [], font: 19 };
 try { const value = JSON.parse(localStorage.getItem(progressKey)); if (value && typeof value === 'object') saved = { ...saved, ...value }; } catch (_) {}
@@ -66,7 +67,7 @@ function setTab(which) {
   for (const name of ['story', 'practice']) { const button = $(`${name}Tab`); const active = name === which; button.classList.toggle('selected', active); button.setAttribute('aria-pressed', String(active)); }
 }
 function openChapter(id, scroll = false, following = false) {
-  if (!following) translations.hide();
+  if (!following) { translations.hide(); sentencePinned = false; }
   if (!following && chapter) { $('followAudio').checked = false; audioPlayer?.setLoop(null); }
   const next = book.find(c => c.id === id) || book[0]; chapter = next;
   if (following) history.replaceState(null, '', `#chapter-${next.id}`); saved.last = next.id; persist();
@@ -130,7 +131,7 @@ function renderStory(c) {
       p.append(document.createTextNode(c.story.slice(offset, sentence.charStart)));
       const span = el('span', c.story.slice(sentence.charStart, sentence.charEnd), 'sentence');
       span.dataset.sentenceId = sentence.id; span.tabIndex = 0; span.setAttribute('role', 'button');
-      span.setAttribute('aria-label', `播放句子：${sentence.text}`);
+      span.setAttribute('aria-label', `查看中文：${sentence.text}`);
       span.addEventListener('click', () => chooseSentence(sentence));
       span.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); chooseSentence(sentence); } });
       p.append(span); offset = sentence.charEnd;
@@ -142,10 +143,10 @@ function renderStory(c) {
 }
 function chooseSentence(sentence) {
   setShadowingCollapsed(false);
-  translations.show(sentence);
-  if (!audioPlayer) { $('sentenceHint').textContent = '音频仍在载入，请稍候；若加载失败，可点击播放器的重试按钮。'; return; }
   selectedSentence = sentence;
-  audioPlayer.playSentence(sentence, !!lastAudioState?.loop);
+  sentencePinned = true;
+  translations.show(sentence);
+  updateSentences(lastAudioState || {time: -1, playing: false});
 }
 function controlSentence() {
   if (selectedSentence && selectedSentence.chapterId === chapter?.id) return selectedSentence;
@@ -160,15 +161,15 @@ function updateSentences(state) {
   lastAudioState = state;
   if (!sentenceData) return;
   const current = sentenceList.find(s => state.time >= s.start && state.time < s.end);
-  if (current) selectedSentence = current;
-  if ($('followAudio').checked && current && chapter?.id !== current.chapterId) openChapter(current.chapterId, false, true);
+  if (current && !sentencePinned) selectedSentence = current;
+  if (!sentencePinned && $('followAudio').checked && current && chapter?.id !== current.chapterId) openChapter(current.chapterId, false, true);
   const activeId = current?.id || null;
   if (highlightedId !== activeId) {
     document.querySelectorAll('.sentence-active').forEach(node => { node.classList.remove('sentence-active'); node.removeAttribute('aria-current'); });
     const node = [...document.querySelectorAll('.sentence')].find(n => n.dataset.sentenceId === activeId);
     if (node) {
       node.classList.add('sentence-active'); node.setAttribute('aria-current', 'true');
-      if ($('followAudio').checked && tab === 'story') { const rect = node.getBoundingClientRect(), panel = document.querySelector('.shadowing').getBoundingClientRect(); if (rect.top < Math.max(100, panel.bottom + 16) || rect.bottom > innerHeight - 60) node.scrollIntoView({block:'center',behavior:'smooth'}); }
+      if (!sentencePinned && $('followAudio').checked && tab === 'story') { const rect = node.getBoundingClientRect(), panel = document.querySelector('.shadowing').getBoundingClientRect(); if (rect.top < Math.max(100, panel.bottom + 16) || rect.bottom > innerHeight - 60) node.scrollIntoView({block:'center',behavior:'smooth'}); }
     }
     highlightedId = activeId;
   }
@@ -180,10 +181,10 @@ function updateSentences(state) {
   $('sentenceNext').disabled = !audioPlayer || index < 0 || index === list.length - 1;
   $('sentencePlay').disabled = !audioPlayer || !selected;
   $('sentenceRepeat').disabled = !audioPlayer || !selected;
-  $('sentencePlay').textContent = state.playing ? '暂停' : '播放';
+  $('sentencePlay').textContent = state.playing && !sentencePinned ? '暂停' : '播放';
   $('sentenceRepeat').setAttribute('aria-pressed', String(!!state.loop));
   $('sentenceRepeat').textContent = state.loop ? '单句循环：开' : '单句循环：关';
-  $('sentenceHint').textContent = state.loop ? '循环已开启，点击另一句可切换循环句；点击暂停停止收听。' : '点击正文查看中文并听该句起的内容；开启单句循环反复跟读。循环适合保持屏幕开启时练习。';
+  $('sentenceHint').textContent = state.loop ? '循环已开启。点击句子只查看中文；点击播放才切换到选中的句子。' : '点击正文只查看中文；点击播放收听选中的句子，开启单句循环反复跟读。';
 }
 async function initSentences(manifest) {
   try {
@@ -193,7 +194,7 @@ async function initSentences(manifest) {
     if (data.bookSha256 !== manifest.book.sha256 || data.chapters?.length !== 24) throw new Error('mismatch');
     sentenceData = data; sentenceList = data.chapters.flatMap(c => c.sentences.map(s => Object.assign(s, {chapterId:c.id})));
     if (chapter) renderStory(chapter);
-    $('sentenceHint').textContent = '点击正文句子查看中文并收听，开启单句循环反复跟读。';
+    $('sentenceHint').textContent = '点击正文句子查看中文，点击播放后收听。';
     if (lastAudioState) updateSentences(lastAudioState);
   } catch (_) { $('sentenceHint').textContent = '逐句时间轴暂时不可用，完整音频仍可收听。请刷新重试。'; }
 }
@@ -254,9 +255,9 @@ $('audioPrevious').addEventListener('click', () => audioPlayer?.previous());
 $('audioNext').addEventListener('click', () => audioPlayer?.next());
 $('sentencePrevious').addEventListener('click', () => moveSentence(-1));
 $('sentenceNext').addEventListener('click', () => moveSentence(1));
-$('sentencePlay').addEventListener('click', () => { if (lastAudioState?.playing) audioPlayer.pause(); else if (controlSentence()) chooseSentence(controlSentence()); });
-$('sentenceRepeat').addEventListener('click', () => { if (lastAudioState?.loop) audioPlayer.setLoop(null); else if (controlSentence()) { selectedSentence = controlSentence(); audioPlayer.playSentence(selectedSentence, true); } });
-$('followAudio').addEventListener('change', () => { if ($('followAudio').checked) { setTab('story'); if(lastAudioState) { highlightedId = null; updateSentences(lastAudioState); } } });
+$('sentencePlay').addEventListener('click', () => { if (lastAudioState?.playing && !sentencePinned) audioPlayer.pause(); else if (controlSentence()) { const sentence = controlSentence(); sentencePinned = false; audioPlayer.playSentence(sentence, !!lastAudioState?.loop); } });
+$('sentenceRepeat').addEventListener('click', () => { if (lastAudioState?.loop) audioPlayer.setLoop(null); else if (controlSentence()) { selectedSentence = controlSentence(); sentencePinned = false; audioPlayer.playSentence(selectedSentence, true); } });
+$('followAudio').addEventListener('change', () => { if ($('followAudio').checked) { sentencePinned = false; setTab('story'); if(lastAudioState) { highlightedId = null; updateSentences(lastAudioState); } } });
 $('audioRate').addEventListener('change', () => audioPlayer?.setRate(Number($('audioRate').value)));
 window.addEventListener('hashchange', () => { const match = location.hash.match(/^#chapter-(\d+)$/); if (book.length && match) openChapter(Number(match[1]), true); });
 window.addEventListener('pagehide', () => audioPlayer?.persist());

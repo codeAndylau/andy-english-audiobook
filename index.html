@@ -8,7 +8,7 @@
   <title>A Place at the Table · Andy’s English Journey</title>
   <script src="theme.js?v=20261119-theme"></script>
   <link rel="stylesheet" href="style.css?v=20261119-drag">
-  <script type="module" src="app.js?v=20261119-drag"></script>
+  <script type="module" src="app.js?v=20261119-translation-only"></script>
 </head>
 <body>
   <a class="skip" href="#reader">跳到正文</a>
@@ -45,7 +45,7 @@
       <button id="shadowingDock" class="shadowing-dock" aria-label="展开逐句跟读" aria-controls="shadowingPanel" aria-expanded="false" hidden>‹ 跟读</button>
       <section id="shadowingPanel" class="shadowing" aria-label="逐句跟读">
         <div class="shadowing-heading"><strong>逐句跟读</strong><label><input id="followAudio" type="checkbox"> 跟随</label><button id="shadowingCollapse" aria-label="收起逐句跟读" aria-controls="shadowingPanel" aria-expanded="true">收起 ›</button></div>
-        <p id="sentenceText" lang="en">音频载入后，可点击正文中的任意句子开始听。</p>
+        <p id="sentenceText" lang="en">点击正文句子查看中文，点击播放后收听。</p>
         <button id="translationToggle" class="translation-toggle" aria-expanded="false" aria-controls="translationPanel" disabled>查看中文</button>
         <div id="translationPanel" class="translation-panel" hidden><p id="sentenceChinese" lang="zh-CN"></p><button id="translationRetry" hidden>重试中文</button></div>
         <div class="shadowing-controls"><button id="sentencePrevious" disabled>上一句</button><button id="sentencePlay" disabled>播放</button><button id="sentenceNext" disabled>下一句</button><button id="sentenceRepeat" disabled aria-pressed="false">单句循环：关</button></div>
