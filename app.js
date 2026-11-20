@@ -14,7 +14,7 @@ const parts = ['Small Conversations', 'A Different Answer', 'In the Room', 'A Pl
 let book = [], chapter = null, tab = 'story', audioPlayer = null, audioManifest = null, audioLoading = false;
 let sentenceData = null, sentenceList = [], lastAudioState = null, selectedSentence = null, highlightedId = null;
 let sentencePinned = false;
-let storyLanguage = 'en', languageRequest = 0;
+let storyLanguage = 'en', languageRequest = 0, inlineTranslationRequest = 0;
 const progressKey = 'apatt-progress-r2';
 let saved = { last: 1, completed: [], font: 19 };
 try { const value = JSON.parse(localStorage.getItem(progressKey)); if (value && typeof value === 'object') saved = { ...saved, ...value }; } catch (_) {}
@@ -124,6 +124,7 @@ function updateChapterAudio() {
 }
 function chapterSentences(id) { return sentenceData?.chapters.find(c => c.id === id)?.sentences || []; }
 function renderStory(c) {
+  ++inlineTranslationRequest;
   $('story').lang = 'en';
   $('story').dataset.mode = 'en';
   $('story').setAttribute('aria-label', '英文故事');
@@ -138,6 +139,7 @@ function renderStory(c) {
       span.dataset.sentenceId = sentence.id; span.tabIndex = 0; span.setAttribute('role', 'button');
       span.setAttribute('aria-label', `查看中文：${sentence.text}`);
       span.addEventListener('click', () => chooseSentence(sentence));
+      span.addEventListener('mouseenter', () => chooseSentence(sentence, false));
       span.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); chooseSentence(sentence); } });
       p.append(span); offset = sentence.charEnd;
     }
@@ -186,12 +188,30 @@ async function updateStoryLanguage(c) {
     if (request === languageRequest) $('story').removeAttribute('aria-busy');
   }
 }
-function chooseSentence(sentence) {
-  setShadowingCollapsed(false);
-  selectedSentence = sentence;
-  sentencePinned = true;
-  translations.show(sentence);
-  updateSentences(lastAudioState || {time: -1, playing: false});
+async function chooseSentence(sentence, select = true) {
+  if (select) {
+    selectedSentence = sentence;
+    sentencePinned = true;
+    updateSentences(lastAudioState || {time: -1, playing: false});
+  }
+  const request = ++inlineTranslationRequest;
+  document.querySelectorAll('.inline-translation').forEach(node => node.remove());
+  if (storyLanguage !== 'en') return;
+  const target = [...$('story').querySelectorAll('.sentence')].find(node => node.dataset.sentenceId === sentence.id);
+  if (!target) return;
+  const line = el('span', '正在加载中文……', 'inline-translation');
+  line.lang = 'zh-CN';
+  line.setAttribute('role', 'status');
+  const targetTop = target.getBoundingClientRect().top - target.parentElement.getBoundingClientRect().top;
+  line.style.top = `${targetTop}px`;
+  target.before(line);
+  try {
+    const text = (await translations.loadChapter(sentence.chapterId))[sentence.id];
+    if (request !== inlineTranslationRequest || !line.isConnected) return;
+    line.textContent = typeof text === 'string' && text.trim() ? text : '中文暂时无法显示。';
+  } catch (_) {
+    if (request === inlineTranslationRequest && line.isConnected) line.textContent = '中文暂时无法显示，请再次点击句子重试。';
+  }
 }
 function controlSentence() {
   if (selectedSentence && selectedSentence.chapterId === chapter?.id) return selectedSentence;
@@ -338,4 +358,4 @@ function setShadowingCollapsed(collapsed, focus = false) {
 }
 $('shadowingCollapse').addEventListener('click', () => setShadowingCollapsed(true, true));
 $('shadowingDock').addEventListener('click', () => setShadowingCollapsed(false, true));
-setShadowingCollapsed(saved.shadowingCollapsed === true);
+setShadowingCollapsed(true);

@@ -49,3 +49,5 @@
 .reader-tools{flex-wrap:wrap}#storyLanguage{font-size:12px;min-height:42px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);max-width:100%}#storyLanguageStatus:empty{display:none}.prose[lang=zh-CN]{font-family:"Songti SC","Noto Serif CJK SC",serif}
 
 .prose[data-mode=bilingual] .sentence{display:block;padding:6px 8px;margin:0 0 16px}.sentence-en,.sentence-zh{display:block}.sentence-zh{font-family:"Songti SC","Noto Serif CJK SC",serif;font-size:.9em;line-height:1.75;color:var(--muted);margin-top:4px}.sentence-active .sentence-zh{color:inherit}
+
+.prose p{position:relative}.inline-translation{position:absolute;left:0;z-index:2;transform:translateY(-100%);pointer-events:none;display:block;width:max-content;max-width:100%;padding:4px 9px;border-left:2px solid var(--accent);background:var(--paper);color:var(--muted);font-family:"Songti SC","Noto Serif CJK SC",serif;font-size:.75em;line-height:1.5}
