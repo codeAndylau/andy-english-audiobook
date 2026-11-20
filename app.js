@@ -188,6 +188,10 @@ async function updateStoryLanguage(c) {
     if (request === languageRequest) $('story').removeAttribute('aria-busy');
   }
 }
+function hideInlineTranslation() {
+  ++inlineTranslationRequest;
+  document.querySelectorAll('.inline-translation').forEach(node => node.remove());
+}
 async function chooseSentence(sentence, select = true) {
   if (select) {
     selectedSentence = sentence;
@@ -306,6 +310,9 @@ async function initAudio() {
   finally { audioLoading = false; }
 }
 $('menu').addEventListener('click', () => menu(!document.body.classList.contains('menu-open')));
+document.addEventListener('click', event => {
+  if (!event.target.closest('#story .sentence')) hideInlineTranslation();
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape') menu(false); });
 $('storyLanguage').addEventListener('change', () => { if (!chapter) return; storyLanguage = $('storyLanguage').value; setTab('story'); renderStory(chapter); });
 $('storyTab').addEventListener('click', () => setTab('story'));
